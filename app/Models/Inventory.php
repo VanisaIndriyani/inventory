@@ -77,11 +77,11 @@ class Inventory extends Model
         $safetyStock = max($this->safety_stock, 1);
         $reorderPoint = $this->reorder_point;
 
-        if ($finalStock <= $reorderPoint) {
+        if ($finalStock <= $safetyStock) {
             return 'Reorder';
         }
 
-        if ($finalStock <= $reorderPoint + (int) round($safetyStock * 0.5)) {
+        if ($finalStock <= $reorderPoint) {
             return 'Warning';
         }
 
