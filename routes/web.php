@@ -33,4 +33,5 @@ Route::middleware('auth')->group(function () {
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
     Route::get('/reports/export-pdf', [ReportController::class, 'exportPdf'])->name('reports.exportPdf');
     Route::get('/stock-status', [StockStatusController::class, 'index'])->name('stock-status.index');
+    Route::put('/stock-status/{inventory}', [StockStatusController::class, 'update'])->name('stock-status.update');
 });

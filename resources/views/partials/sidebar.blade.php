@@ -21,7 +21,7 @@
             <a href="{{ route('inventories.index') }}"
                class="nav-link {{ request()->routeIs('inventories.*') ? 'active' : '' }}">
                 <i class="fa-solid fa-box-archive"></i>
-                <span class="nav-label">Master Inventory</span>
+                <span class="nav-label">Stok Barang</span>
             </a>
             <a href="{{ route('stock-in.index') }}"
                class="nav-link {{ request()->routeIs('stock-in.*') ? 'active' : '' }}">
@@ -36,7 +36,7 @@
             <a href="{{ route('stock-status.index') }}"
                class="nav-link {{ request()->routeIs('stock-status.*') ? 'active' : '' }}">
                 <i class="fa-solid fa-traffic-light"></i>
-                <span class="nav-label">Status Stok</span>
+                <span class="nav-label">Reorder Point</span>
             </a>
             <a href="{{ route('reports.index') }}"
                class="nav-link {{ request()->routeIs('reports.*') ? 'active' : '' }}">

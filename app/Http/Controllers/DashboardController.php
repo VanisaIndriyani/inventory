@@ -18,6 +18,7 @@ class DashboardController extends Controller
         $totalItems = $inventories->count();
         $totalStock = $inventories->sum(fn (Inventory $inventory) => $inventory->final_stock);
 
+        $amanCount = $inventories->where('status', 'Aman')->count();
         $warningCount = $inventories->where('status', 'Warning')->count();
         $reorderCount = $inventories->where('status', 'Reorder')->count();
 
@@ -74,9 +75,12 @@ class DashboardController extends Controller
             'inventories' => $inventories,
             'totalItems' => $totalItems,
             'totalStock' => $totalStock,
+            'amanCount' => $amanCount,
             'warningCount' => $warningCount,
             'reorderCount' => $reorderCount,
             'criticalItems' => $criticalItems,
+            'pieLabels' => ['Reorder', 'Warning', 'Aman'],
+            'pieData' => [$reorderCount, $warningCount, $amanCount],
             'chartLabels' => $labels,
             'chartIncoming' => $incomingData,
             'chartOutgoing' => $outgoingData,

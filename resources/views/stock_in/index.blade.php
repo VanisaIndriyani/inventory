@@ -30,7 +30,7 @@
                         <th>Tanggal</th>
                         <th>Barang</th>
                         <th class="text-center">Jumlah</th>
-                        <th>Supplier</th>
+                        <th>Vendor</th>
                         <th>Penerima</th>
                     </tr>
                     </thead>
@@ -117,11 +117,11 @@
                                 @enderror
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label">Supplier</label>
+                                <label class="form-label">Vendor</label>
                                 <input type="text" name="supplier"
                                        class="form-control @error('supplier') is-invalid @enderror"
                                        value="{{ old('supplier') }}"
-                                       placeholder="Kosongkan untuk pakai supplier utama">
+                                       placeholder="Nama vendor">
                                 @error('supplier')
                                 <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror

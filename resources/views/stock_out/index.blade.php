@@ -29,9 +29,8 @@
                     <tr>
                         <th>Tanggal</th>
                         <th>Barang</th>
-                        <th class="text-center">Jumlah</th>
-                        <th>Departemen Pemakai</th>
-                        <th>Keperluan</th>
+                        <th class="text-center">Jumlah Unit Keluar</th>
+                        <th>Departemen Peminjam</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -46,11 +45,10 @@
                                 -{{ number_format($row->quantity) }}
                             </td>
                             <td>{{ $row->department }}</td>
-                            <td>{{ $row->purpose ?: '-' }}</td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="text-center text-muted py-3">
+                            <td colspan="4" class="text-center text-muted py-3">
                                 Belum ada transaksi barang keluar.
                             </td>
                         </tr>
@@ -117,20 +115,11 @@
                                 @enderror
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label">Departemen Pemakai</label>
+                                <label class="form-label">Departemen Peminjam</label>
                                 <input type="text" name="department"
                                        class="form-control @error('department') is-invalid @enderror"
                                        value="{{ old('department') }}" required>
                                 @error('department')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="col-md-5">
-                                <label class="form-label">Keperluan</label>
-                                <input type="text" name="purpose"
-                                       class="form-control @error('purpose') is-invalid @enderror"
-                                       value="{{ old('purpose') }}">
-                                @error('purpose')
                                 <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>

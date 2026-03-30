@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Inventory;
 use App\Models\StockIn;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class StockInController extends Controller
 {
@@ -37,7 +39,21 @@ class StockInController extends Controller
             'received_by' => ['nullable', 'string', 'max:255'],
         ]);
 
-        StockIn::create($data);
+        DB::transaction(function () use ($data) {
+            $inventory = Inventory::query()
+                ->lockForUpdate()
+                ->findOrFail($data['inventory_id']);
+
+            $receivedDate = Carbon::parse($data['received_at']);
+            $column = Inventory::stockColumnForMonth((int) $receivedDate->month);
+
+            $current = (int) ($inventory->{$column} ?? 0);
+            $inventory->update([
+                $column => $current + (int) $data['quantity'],
+            ]);
+
+            StockIn::query()->create($data);
+        });
 
         return redirect()
             ->route('stock-in.index')

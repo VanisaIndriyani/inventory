@@ -1,15 +1,15 @@
 @extends('layouts.app')
 
-@section('title', 'Master Inventory')
+@section('title', 'Stok Barang')
 
 @section('page-title')
-    Master Inventory
+    Stok Barang
 @endsection
 
 @section('content')
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <div class="page-title">Master Inventory</div>
+            <div class="page-title">Stok Barang</div>
         </div>
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#inventoryCreateModal">
             <i class="fa-solid fa-plus me-1"></i> Tambah Barang
@@ -29,32 +29,42 @@
                 <table class="table table-modern mb-0">
                     <thead>
                     <tr>
-                        <th>Kode / Nama</th>
-                        <th class="text-center">Stok Akhir</th>
-                        <th class="text-center">Safety Stock</th>
+                        <th>Kode Barang</th>
+                        <th>Nama Barang</th>
+                        <th class="text-center">Jan</th>
+                        <th class="text-center">Feb</th>
+                        <th class="text-center">Mar</th>
+                        <th class="text-center">Apr</th>
+                        <th class="text-center">Mei</th>
+                        <th class="text-center">Jun</th>
+                        <th class="text-center">Jul</th>
+                        <th class="text-center">Agu</th>
+                        <th class="text-center">Sep</th>
+                        <th class="text-center">Okt</th>
+                        <th class="text-center">Nov</th>
+                        <th class="text-center">Des</th>
                         <th>Lokasi</th>
-                        <th class="text-center">Status</th>
                         <th class="text-end">Aksi</th>
                     </tr>
                     </thead>
                     <tbody>
                     @forelse($inventories as $inventory)
                         <tr>
-                            <td>
-                                <div class="fw-semibold">{{ $inventory->name }}</div>
-                                <div class="small text-muted">{{ $inventory->code }}</div>
-                            </td>
-                            <td class="text-center fw-semibold">{{ number_format($inventory->final_stock) }}</td>
-                            <td class="text-center">{{ number_format($inventory->safety_stock) }}</td>
+                            <td class="fw-semibold">{{ $inventory->code }}</td>
+                            <td>{{ $inventory->name }}</td>
+                            <td class="text-center">{{ number_format($inventory->stock_jan) }}</td>
+                            <td class="text-center">{{ number_format($inventory->stock_feb) }}</td>
+                            <td class="text-center">{{ number_format($inventory->stock_mar) }}</td>
+                            <td class="text-center">{{ number_format($inventory->stock_apr) }}</td>
+                            <td class="text-center">{{ number_format($inventory->stock_may) }}</td>
+                            <td class="text-center">{{ number_format($inventory->stock_jun) }}</td>
+                            <td class="text-center">{{ number_format($inventory->stock_jul) }}</td>
+                            <td class="text-center">{{ number_format($inventory->stock_aug) }}</td>
+                            <td class="text-center">{{ number_format($inventory->stock_sep) }}</td>
+                            <td class="text-center">{{ number_format($inventory->stock_oct) }}</td>
+                            <td class="text-center">{{ number_format($inventory->stock_nov) }}</td>
+                            <td class="text-center">{{ number_format($inventory->stock_dec) }}</td>
                             <td>{{ $inventory->storage_location }}</td>
-                            <td class="text-center">
-                                @php
-                                    $statusClass = $inventory->status === 'Aman'
-                                        ? 'badge-status-aman'
-                                        : ($inventory->status === 'Warning' ? 'badge-status-warning' : 'badge-status-reorder');
-                                @endphp
-                                <span class="badge-status {{ $statusClass }}">{{ $inventory->status }}</span>
-                            </td>
                             <td class="text-end">
                                 <div class="btn-group btn-group-sm" role="group">
                                     <button type="button"
@@ -81,7 +91,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="text-center text-muted py-3">
+                            <td colspan="16" class="text-center text-muted py-3">
                                 Belum ada data inventory.
                             </td>
                         </tr>
@@ -125,48 +135,123 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
-                            <div class="col-md-3">
-                                <label class="form-label">Stok Awal</label>
-                                <input type="number" min="0" name="initial_stock"
-                                       class="form-control @error('initial_stock') is-invalid @enderror"
-                                       value="{{ old('initial_stock', 0) }}" required>
-                                @error('initial_stock')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">Safety Stock</label>
-                                <input type="number" min="0" name="safety_stock"
-                                       class="form-control @error('safety_stock') is-invalid @enderror"
-                                       value="{{ old('safety_stock', 0) }}" required>
-                                @error('safety_stock')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">Lead Time Supplier (hari)</label>
-                                <input type="number" min="0" name="supplier_lead_time"
-                                       class="form-control @error('supplier_lead_time') is-invalid @enderror"
-                                       value="{{ old('supplier_lead_time', 0) }}" required>
-                                @error('supplier_lead_time')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">Supplier Utama</label>
-                                <input type="text" name="main_supplier"
-                                       class="form-control @error('main_supplier') is-invalid @enderror"
-                                       value="{{ old('main_supplier') }}">
-                                @error('main_supplier')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
                             <div class="col-md-6">
-                                <label class="form-label">Lokasi Penyimpanan</label>
+                                <label class="form-label">Lokasi</label>
                                 <input type="text" name="storage_location"
                                        class="form-control @error('storage_location') is-invalid @enderror"
                                        value="{{ old('storage_location') }}">
                                 @error('storage_location')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-12">
+                                <div class="fw-semibold mb-2">Stok per Bulan (Januari - Desember)</div>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Jan</label>
+                                <input type="number" min="0" name="stock_jan"
+                                       class="form-control @error('stock_jan') is-invalid @enderror"
+                                       value="{{ old('stock_jan', 0) }}" required>
+                                @error('stock_jan')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Feb</label>
+                                <input type="number" min="0" name="stock_feb"
+                                       class="form-control @error('stock_feb') is-invalid @enderror"
+                                       value="{{ old('stock_feb', 0) }}" required>
+                                @error('stock_feb')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Mar</label>
+                                <input type="number" min="0" name="stock_mar"
+                                       class="form-control @error('stock_mar') is-invalid @enderror"
+                                       value="{{ old('stock_mar', 0) }}" required>
+                                @error('stock_mar')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Apr</label>
+                                <input type="number" min="0" name="stock_apr"
+                                       class="form-control @error('stock_apr') is-invalid @enderror"
+                                       value="{{ old('stock_apr', 0) }}" required>
+                                @error('stock_apr')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Mei</label>
+                                <input type="number" min="0" name="stock_may"
+                                       class="form-control @error('stock_may') is-invalid @enderror"
+                                       value="{{ old('stock_may', 0) }}" required>
+                                @error('stock_may')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Jun</label>
+                                <input type="number" min="0" name="stock_jun"
+                                       class="form-control @error('stock_jun') is-invalid @enderror"
+                                       value="{{ old('stock_jun', 0) }}" required>
+                                @error('stock_jun')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Jul</label>
+                                <input type="number" min="0" name="stock_jul"
+                                       class="form-control @error('stock_jul') is-invalid @enderror"
+                                       value="{{ old('stock_jul', 0) }}" required>
+                                @error('stock_jul')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Agu</label>
+                                <input type="number" min="0" name="stock_aug"
+                                       class="form-control @error('stock_aug') is-invalid @enderror"
+                                       value="{{ old('stock_aug', 0) }}" required>
+                                @error('stock_aug')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Sep</label>
+                                <input type="number" min="0" name="stock_sep"
+                                       class="form-control @error('stock_sep') is-invalid @enderror"
+                                       value="{{ old('stock_sep', 0) }}" required>
+                                @error('stock_sep')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Okt</label>
+                                <input type="number" min="0" name="stock_oct"
+                                       class="form-control @error('stock_oct') is-invalid @enderror"
+                                       value="{{ old('stock_oct', 0) }}" required>
+                                @error('stock_oct')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Nov</label>
+                                <input type="number" min="0" name="stock_nov"
+                                       class="form-control @error('stock_nov') is-invalid @enderror"
+                                       value="{{ old('stock_nov', 0) }}" required>
+                                @error('stock_nov')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Des</label>
+                                <input type="number" min="0" name="stock_dec"
+                                       class="form-control @error('stock_dec') is-invalid @enderror"
+                                       value="{{ old('stock_dec', 0) }}" required>
+                                @error('stock_dec')
                                 <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -204,50 +289,48 @@
                                 <div class="small text-muted">Kode Barang</div>
                                 <div class="fw-semibold">{{ $inventory->code }}</div>
                             </div>
-                            <div class="col-md-3">
-                                <div class="small text-muted">Stok Awal</div>
-                                <div>{{ number_format($inventory->initial_stock) }}</div>
+                            <div class="col-12">
+                                <div class="small text-muted">Lokasi</div>
+                                <div class="fw-semibold">{{ $inventory->storage_location }}</div>
                             </div>
-                            <div class="col-md-3">
-                                <div class="small text-muted">Masuk</div>
-                                <div>{{ number_format($inventory->total_in) }}</div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="small text-muted">Keluar</div>
-                                <div>{{ number_format($inventory->total_out) }}</div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="small text-muted">Stok Akhir</div>
-                                <div class="fw-semibold">{{ number_format($inventory->final_stock) }}</div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="small text-muted">Safety Stock</div>
-                                <div>{{ number_format($inventory->safety_stock) }}</div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="small text-muted">Reorder Point</div>
-                                <div>{{ number_format($inventory->reorder_point) }}</div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="small text-muted">Lead Time Supplier</div>
-                                <div>{{ $inventory->supplier_lead_time }} hari</div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="small text-muted">Status</div>
-                                @php
-                                    $statusClass = $inventory->status === 'Aman'
-                                        ? 'badge-status-aman'
-                                        : ($inventory->status === 'Warning' ? 'badge-status-warning' : 'badge-status-reorder');
-                                @endphp
-                                <span class="badge-status {{ $statusClass }}">{{ $inventory->status }}</span>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="small text-muted">Supplier Utama</div>
-                                <div>{{ $inventory->main_supplier }}</div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="small text-muted">Lokasi Penyimpanan</div>
-                                <div>{{ $inventory->storage_location }}</div>
+                            <div class="col-12">
+                                <div class="small text-muted mb-2">Stok per Bulan</div>
+                                <div class="table-responsive">
+                                    <table class="table table-sm table-modern mb-0">
+                                        <thead>
+                                        <tr>
+                                            <th class="text-center">Jan</th>
+                                            <th class="text-center">Feb</th>
+                                            <th class="text-center">Mar</th>
+                                            <th class="text-center">Apr</th>
+                                            <th class="text-center">Mei</th>
+                                            <th class="text-center">Jun</th>
+                                            <th class="text-center">Jul</th>
+                                            <th class="text-center">Agu</th>
+                                            <th class="text-center">Sep</th>
+                                            <th class="text-center">Okt</th>
+                                            <th class="text-center">Nov</th>
+                                            <th class="text-center">Des</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td class="text-center">{{ number_format($inventory->stock_jan) }}</td>
+                                            <td class="text-center">{{ number_format($inventory->stock_feb) }}</td>
+                                            <td class="text-center">{{ number_format($inventory->stock_mar) }}</td>
+                                            <td class="text-center">{{ number_format($inventory->stock_apr) }}</td>
+                                            <td class="text-center">{{ number_format($inventory->stock_may) }}</td>
+                                            <td class="text-center">{{ number_format($inventory->stock_jun) }}</td>
+                                            <td class="text-center">{{ number_format($inventory->stock_jul) }}</td>
+                                            <td class="text-center">{{ number_format($inventory->stock_aug) }}</td>
+                                            <td class="text-center">{{ number_format($inventory->stock_sep) }}</td>
+                                            <td class="text-center">{{ number_format($inventory->stock_oct) }}</td>
+                                            <td class="text-center">{{ number_format($inventory->stock_nov) }}</td>
+                                            <td class="text-center">{{ number_format($inventory->stock_dec) }}</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                         <div class="mt-4 d-flex justify-content-end">
@@ -288,35 +371,74 @@
                                            class="form-control"
                                            value="{{ $inventory->name }}" required>
                                 </div>
-                                <div class="col-md-3">
-                                    <label class="form-label">Stok Awal</label>
-                                    <input type="number" min="0" name="initial_stock"
-                                           class="form-control"
-                                           value="{{ $inventory->initial_stock }}" required>
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label">Safety Stock</label>
-                                    <input type="number" min="0" name="safety_stock"
-                                           class="form-control"
-                                           value="{{ $inventory->safety_stock }}" required>
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label">Lead Time Supplier (hari)</label>
-                                    <input type="number" min="0" name="supplier_lead_time"
-                                           class="form-control"
-                                           value="{{ $inventory->supplier_lead_time }}" required>
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label">Supplier Utama</label>
-                                    <input type="text" name="main_supplier"
-                                           class="form-control"
-                                           value="{{ $inventory->main_supplier }}">
-                                </div>
                                 <div class="col-md-6">
-                                    <label class="form-label">Lokasi Penyimpanan</label>
+                                    <label class="form-label">Lokasi</label>
                                     <input type="text" name="storage_location"
                                            class="form-control"
                                            value="{{ $inventory->storage_location }}">
+                                </div>
+                                <div class="col-12">
+                                    <div class="fw-semibold mb-2">Stok per Bulan (Januari - Desember)</div>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Jan</label>
+                                    <input type="number" min="0" name="stock_jan" class="form-control"
+                                           value="{{ $inventory->stock_jan }}" required>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Feb</label>
+                                    <input type="number" min="0" name="stock_feb" class="form-control"
+                                           value="{{ $inventory->stock_feb }}" required>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Mar</label>
+                                    <input type="number" min="0" name="stock_mar" class="form-control"
+                                           value="{{ $inventory->stock_mar }}" required>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Apr</label>
+                                    <input type="number" min="0" name="stock_apr" class="form-control"
+                                           value="{{ $inventory->stock_apr }}" required>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Mei</label>
+                                    <input type="number" min="0" name="stock_may" class="form-control"
+                                           value="{{ $inventory->stock_may }}" required>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Jun</label>
+                                    <input type="number" min="0" name="stock_jun" class="form-control"
+                                           value="{{ $inventory->stock_jun }}" required>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Jul</label>
+                                    <input type="number" min="0" name="stock_jul" class="form-control"
+                                           value="{{ $inventory->stock_jul }}" required>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Agu</label>
+                                    <input type="number" min="0" name="stock_aug" class="form-control"
+                                           value="{{ $inventory->stock_aug }}" required>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Sep</label>
+                                    <input type="number" min="0" name="stock_sep" class="form-control"
+                                           value="{{ $inventory->stock_sep }}" required>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Okt</label>
+                                    <input type="number" min="0" name="stock_oct" class="form-control"
+                                           value="{{ $inventory->stock_oct }}" required>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Nov</label>
+                                    <input type="number" min="0" name="stock_nov" class="form-control"
+                                           value="{{ $inventory->stock_nov }}" required>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Des</label>
+                                    <input type="number" min="0" name="stock_dec" class="form-control"
+                                           value="{{ $inventory->stock_dec }}" required>
                                 </div>
                             </div>
                             <div class="mt-4 d-flex justify-content-end gap-2">

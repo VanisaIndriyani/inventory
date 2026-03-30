@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Inventory;
 use App\Models\StockOut;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class StockOutController extends Controller
 {
@@ -34,10 +36,35 @@ class StockOutController extends Controller
             'issued_at' => ['required', 'date'],
             'department' => ['required', 'string', 'max:255'],
             'quantity' => ['required', 'integer', 'min:1'],
-            'purpose' => ['nullable', 'string', 'max:255'],
         ]);
 
-        StockOut::create($data);
+        $issuedDate = Carbon::parse($data['issued_at']);
+        $monthColumn = Inventory::stockColumnForMonth((int) $issuedDate->month);
+
+        try {
+            DB::transaction(function () use ($data, $monthColumn) {
+                $inventory = Inventory::query()
+                    ->lockForUpdate()
+                    ->findOrFail($data['inventory_id']);
+
+                $current = (int) ($inventory->{$monthColumn} ?? 0);
+                $quantity = (int) $data['quantity'];
+
+                if ($quantity > $current) {
+                    throw new \RuntimeException('Stok tidak mencukupi.');
+                }
+
+                $inventory->update([
+                    $monthColumn => $current - $quantity,
+                ]);
+
+                StockOut::query()->create($data);
+            });
+        } catch (\RuntimeException $exception) {
+            return back()
+                ->withErrors(['quantity' => 'Stok bulan ini tidak mencukupi untuk pengeluaran tersebut.'])
+                ->withInput();
+        }
 
         return redirect()
             ->route('stock-out.index')

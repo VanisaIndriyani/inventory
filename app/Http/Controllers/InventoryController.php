@@ -24,11 +24,19 @@ class InventoryController extends Controller
         $data = $request->validate([
             'code' => ['required', 'string', 'max:50', 'unique:inventories,code'],
             'name' => ['required', 'string', 'max:255'],
-            'initial_stock' => ['required', 'integer', 'min:0'],
-            'main_supplier' => ['nullable', 'string', 'max:255'],
-            'supplier_lead_time' => ['required', 'integer', 'min:0'],
             'storage_location' => ['nullable', 'string', 'max:255'],
-            'safety_stock' => ['required', 'integer', 'min:0'],
+            'stock_jan' => ['required', 'integer', 'min:0'],
+            'stock_feb' => ['required', 'integer', 'min:0'],
+            'stock_mar' => ['required', 'integer', 'min:0'],
+            'stock_apr' => ['required', 'integer', 'min:0'],
+            'stock_may' => ['required', 'integer', 'min:0'],
+            'stock_jun' => ['required', 'integer', 'min:0'],
+            'stock_jul' => ['required', 'integer', 'min:0'],
+            'stock_aug' => ['required', 'integer', 'min:0'],
+            'stock_sep' => ['required', 'integer', 'min:0'],
+            'stock_oct' => ['required', 'integer', 'min:0'],
+            'stock_nov' => ['required', 'integer', 'min:0'],
+            'stock_dec' => ['required', 'integer', 'min:0'],
         ]);
 
         Inventory::create($data);
@@ -48,11 +56,19 @@ class InventoryController extends Controller
         $data = $request->validate([
             'code' => ['required', 'string', 'max:50', 'unique:inventories,code,' . $inventory->id],
             'name' => ['required', 'string', 'max:255'],
-            'initial_stock' => ['required', 'integer', 'min:0'],
-            'main_supplier' => ['nullable', 'string', 'max:255'],
-            'supplier_lead_time' => ['required', 'integer', 'min:0'],
             'storage_location' => ['nullable', 'string', 'max:255'],
-            'safety_stock' => ['required', 'integer', 'min:0'],
+            'stock_jan' => ['required', 'integer', 'min:0'],
+            'stock_feb' => ['required', 'integer', 'min:0'],
+            'stock_mar' => ['required', 'integer', 'min:0'],
+            'stock_apr' => ['required', 'integer', 'min:0'],
+            'stock_may' => ['required', 'integer', 'min:0'],
+            'stock_jun' => ['required', 'integer', 'min:0'],
+            'stock_jul' => ['required', 'integer', 'min:0'],
+            'stock_aug' => ['required', 'integer', 'min:0'],
+            'stock_sep' => ['required', 'integer', 'min:0'],
+            'stock_oct' => ['required', 'integer', 'min:0'],
+            'stock_nov' => ['required', 'integer', 'min:0'],
+            'stock_dec' => ['required', 'integer', 'min:0'],
         ]);
 
         $inventory->update($data);
@@ -71,4 +87,3 @@ class InventoryController extends Controller
             ->with('status', 'Data inventory berhasil dihapus.');
     }
 }
-

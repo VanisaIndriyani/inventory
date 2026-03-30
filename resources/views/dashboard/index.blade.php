@@ -83,44 +83,69 @@
             </div>
         </div>
         <div class="col-lg-5">
-            <div class="card card-soft border-0 h-100">
-                <div class="card-body">
-                    <div class="fw-semibold mb-3">Barang Kritis</div>
-                    <div class="table-responsive">
-                        <table class="table table-modern mb-0">
-                            <thead>
-                            <tr>
-                                <th>Barang</th>
-                                <th class="text-end">Stok Akhir</th>
-                                <th class="text-center">Status</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @forelse($criticalItems as $item)
+            <div class="d-flex flex-column gap-3 h-100">
+                <div class="card card-soft border-0">
+                    <div class="card-body">
+                        <div class="fw-semibold mb-3">Posisi Stok terhadap ROP</div>
+                        <div style="height:220px;">
+                            <canvas id="ropPieChart"></canvas>
+                        </div>
+                        <div class="d-flex gap-3 flex-wrap mt-3 small">
+                            <div class="d-flex align-items-center gap-2">
+                                <span style="width:10px; height:10px; border-radius:999px; background:#ef4444; display:inline-block;"></span>
+                                <span>Reorder</span>
+                            </div>
+                            <div class="d-flex align-items-center gap-2">
+                                <span style="width:10px; height:10px; border-radius:999px; background:#f59e0b; display:inline-block;"></span>
+                                <span>Warning</span>
+                            </div>
+                            <div class="d-flex align-items-center gap-2">
+                                <span style="width:10px; height:10px; border-radius:999px; background:#22c55e; display:inline-block;"></span>
+                                <span>Aman</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card card-soft border-0 flex-grow-1">
+                    <div class="card-body">
+                        <div class="fw-semibold mb-3">Barang Kritis</div>
+                        <div class="table-responsive">
+                            <table class="table table-modern mb-0">
+                                <thead>
                                 <tr>
-                                    <td>
-                                        <div class="fw-semibold">{{ $item->name }}</div>
-                                        <div class="small text-muted">{{ $item->code }}</div>
-                                    </td>
-                                    <td class="text-end">{{ number_format($item->final_stock) }}</td>
-                                    <td class="text-center">
-                                        @php
-                                            $statusClass = $item->status === 'Aman'
-                                                ? 'badge-status-aman'
-                                                : ($item->status === 'Warning' ? 'badge-status-warning' : 'badge-status-reorder');
-                                        @endphp
-                                        <span class="badge-status {{ $statusClass }}">{{ $item->status }}</span>
-                                    </td>
+                                    <th>Barang</th>
+                                    <th class="text-end">Stok Bulan Ini</th>
+                                    <th class="text-center">Status</th>
                                 </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="3" class="text-center text-muted small py-3">
-                                        Tidak ada barang dengan status Warning/Reorder.
-                                    </td>
-                                </tr>
-                            @endforelse
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                @forelse($criticalItems as $item)
+                                    <tr>
+                                        <td>
+                                            <div class="fw-semibold">{{ $item->name }}</div>
+                                            <div class="small text-muted">{{ $item->code }}</div>
+                                        </td>
+                                        <td class="text-end">{{ number_format($item->final_stock) }}</td>
+                                        <td class="text-center">
+                                            @php
+                                                $statusClass = $item->status === 'Aman'
+                                                    ? 'badge-status-aman'
+                                                    : ($item->status === 'Warning' ? 'badge-status-warning' : 'badge-status-reorder');
+                                            @endphp
+                                            <span class="badge-status {{ $statusClass }}">{{ $item->status }}</span>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="3" class="text-center text-muted small py-3">
+                                            Tidak ada barang dengan status Warning/Reorder.
+                                        </td>
+                                    </tr>
+                                @endforelse
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -135,11 +160,9 @@
                     <thead>
                     <tr>
                         <th>Barang</th>
-                        <th class="text-end">Stok Awal</th>
-                        <th class="text-end">Masuk</th>
-                        <th class="text-end">Keluar</th>
-                        <th class="text-end">Stok Akhir</th>
+                        <th class="text-end">Stok Bulan Ini</th>
                         <th class="text-center">Safety Stock</th>
+                        <th class="text-center">ROP Alert</th>
                         <th class="text-center">Reorder Point</th>
                         <th class="text-center">Status</th>
                     </tr>
@@ -151,11 +174,9 @@
                                 <div class="fw-semibold">{{ $inventory->name }}</div>
                                 <div class="small text-muted">{{ $inventory->code }}</div>
                             </td>
-                            <td class="text-end">{{ number_format($inventory->initial_stock) }}</td>
-                            <td class="text-end">{{ number_format($inventory->total_in) }}</td>
-                            <td class="text-end">{{ number_format($inventory->total_out) }}</td>
                             <td class="text-end fw-semibold">{{ number_format($inventory->final_stock) }}</td>
                             <td class="text-center">{{ number_format($inventory->safety_stock) }}</td>
+                            <td class="text-center">{{ number_format($inventory->rop_alert) }}</td>
                             <td class="text-center">{{ number_format($inventory->reorder_point) }}</td>
                             <td class="text-center">
                                 @php
@@ -168,7 +189,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="text-center text-muted py-3">
+                            <td colspan="6" class="text-center text-muted py-3">
                                 Belum ada data inventory.
                             </td>
                         </tr>
@@ -238,6 +259,50 @@
                                 color: 'rgba(148, 163, 184, 0.25)',
                             },
                         },
+                    },
+                },
+            });
+        })();
+
+        (function () {
+            const ctx = document.getElementById('ropPieChart');
+            if (!ctx) {
+                return;
+            }
+
+            const labels = {!! json_encode($pieLabels) !!};
+            const data = {!! json_encode($pieData) !!};
+
+            new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            data: data,
+                            backgroundColor: ['#ef4444', '#f59e0b', '#22c55e'],
+                            borderColor: '#ffffff',
+                            borderWidth: 2,
+                        },
+                    ],
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false,
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    const total = context.dataset.data.reduce((acc, value) => acc + value, 0) || 1;
+                                    const value = context.raw || 0;
+                                    const percent = (value / total) * 100;
+                                    return `${context.label}: ${value} (${percent.toFixed(1)}%)`;
+                                }
+                            }
+                        }
                     },
                 },
             });
