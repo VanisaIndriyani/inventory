@@ -84,7 +84,6 @@
                         <th class="text-end">Usage Rate</th>
                         <th class="text-end">Lead Time</th>
                         <th class="text-center">Safety Stock</th>
-                        <th class="text-center">ROP Alert</th>
                         <th class="text-center">ROP</th>
                         <th class="text-center">Status</th>
                         <th class="text-end">Aksi</th>
@@ -104,7 +103,6 @@
                             <td class="text-end">{{ number_format((float) $inventory->usage_rate, 2) }}</td>
                             <td class="text-end">{{ number_format($inventory->lead_time) }}</td>
                             <td class="text-center">{{ number_format($inventory->safety_stock) }}</td>
-                            <td class="text-center">{{ number_format($inventory->rop_alert) }}</td>
                             <td class="text-center">{{ number_format($inventory->reorder_point) }}</td>
                             <td class="text-center">
                                 @php
@@ -124,7 +122,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="9" class="text-center text-muted py-3">
+                            <td colspan="8" class="text-center text-muted py-3">
                                 Belum ada data inventory.
                             </td>
                         </tr>
@@ -167,11 +165,6 @@
                                     <label class="form-label">Safety Stock</label>
                                     <input type="number" min="0" name="safety_stock" class="form-control"
                                            value="{{ old('safety_stock', $inventory->safety_stock) }}" required>
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label">ROP Alert</label>
-                                    <input type="number" min="0" name="rop_alert" class="form-control"
-                                           value="{{ old('rop_alert', $inventory->rop_alert) }}" required>
                                 </div>
 
                                 <div class="col-12 mt-2">

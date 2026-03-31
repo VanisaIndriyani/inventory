@@ -38,7 +38,6 @@ class StockStatusController extends Controller
             'usage_rate' => ['required', 'numeric', 'min:0'],
             'lead_time' => ['required', 'integer', 'min:0'],
             'safety_stock' => ['required', 'integer', 'min:0'],
-            'rop_alert' => ['required', 'integer', 'min:0'],
         ];
 
         for ($day = 1; $day <= 30; $day++) {

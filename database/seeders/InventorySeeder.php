@@ -20,7 +20,6 @@ class InventorySeeder extends Seeder
                 'safety_stock' => 150,
                 'usage_rate' => 30,
                 'lead_time' => 3,
-                'rop_alert' => 350,
                 $monthColumn => 500,
             ],
             [
@@ -30,7 +29,6 @@ class InventorySeeder extends Seeder
                 'safety_stock' => 100,
                 'usage_rate' => 12,
                 'lead_time' => 5,
-                'rop_alert' => 200,
                 $monthColumn => 300,
             ],
             [
@@ -40,7 +38,6 @@ class InventorySeeder extends Seeder
                 'safety_stock' => 200,
                 'usage_rate' => 45,
                 'lead_time' => 7,
-                'rop_alert' => 650,
                 $monthColumn => 800,
             ],
             [
@@ -50,7 +47,6 @@ class InventorySeeder extends Seeder
                 'safety_stock' => 250,
                 'usage_rate' => 60,
                 'lead_time' => 4,
-                'rop_alert' => 750,
                 $monthColumn => 1000,
             ],
             [
@@ -60,7 +56,6 @@ class InventorySeeder extends Seeder
                 'safety_stock' => 40,
                 'usage_rate' => 2,
                 'lead_time' => 6,
-                'rop_alert' => 80,
                 $monthColumn => 120,
             ],
         ];

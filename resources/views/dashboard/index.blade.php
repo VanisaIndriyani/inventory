@@ -162,7 +162,6 @@
                         <th>Barang</th>
                         <th class="text-end">Stok Bulan Ini</th>
                         <th class="text-center">Safety Stock</th>
-                        <th class="text-center">ROP Alert</th>
                         <th class="text-center">Reorder Point</th>
                         <th class="text-center">Status</th>
                     </tr>
@@ -176,7 +175,6 @@
                             </td>
                             <td class="text-end fw-semibold">{{ number_format($inventory->final_stock) }}</td>
                             <td class="text-center">{{ number_format($inventory->safety_stock) }}</td>
-                            <td class="text-center">{{ number_format($inventory->rop_alert) }}</td>
                             <td class="text-center">{{ number_format($inventory->reorder_point) }}</td>
                             <td class="text-center">
                                 @php
@@ -189,7 +187,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="text-center text-muted py-3">
+                            <td colspan="5" class="text-center text-muted py-3">
                                 Belum ada data inventory.
                             </td>
                         </tr>

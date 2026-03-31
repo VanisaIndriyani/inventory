@@ -32,7 +32,6 @@ class Inventory extends Model
         'safety_stock',
         'usage_rate',
         'lead_time',
-        'rop_alert',
         'stock_jan',
         'stock_feb',
         'stock_mar',
@@ -83,7 +82,6 @@ class Inventory extends Model
         'safety_stock' => 'integer',
         'usage_rate' => 'decimal:2',
         'lead_time' => 'integer',
-        'rop_alert' => 'integer',
         'stock_jan' => 'integer',
         'stock_feb' => 'integer',
         'stock_mar' => 'integer',
@@ -189,13 +187,13 @@ class Inventory extends Model
     {
         $finalStock = $this->final_stock;
         $reorderPoint = $this->reorder_point;
-        $ropAlert = max($this->rop_alert, $reorderPoint);
+        $warningPoint = $reorderPoint + max($this->safety_stock, 0);
 
         if ($finalStock <= $reorderPoint) {
             return 'Reorder';
         }
 
-        if ($finalStock <= $ropAlert) {
+        if ($finalStock <= $warningPoint) {
             return 'Warning';
         }
 
