@@ -142,13 +142,13 @@ class Inventory extends Model
     {
         $stock = $this->stockForMonth($month);
         $reorderPoint = $this->reorder_point;
-        $warningPoint = $reorderPoint + max($this->safety_stock, 0);
+        $safetyStock = max($this->safety_stock, 0);
 
-        if ($stock <= $reorderPoint) {
+        if ($stock <= $safetyStock) {
             return 'Reorder';
         }
 
-        if ($stock <= $warningPoint) {
+        if ($stock <= $reorderPoint) {
             return 'Warning';
         }
 
