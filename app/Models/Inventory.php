@@ -134,32 +134,8 @@ class Inventory extends Model
     public function stockForMonth(int $month): int
     {
         $column = self::stockColumnForMonth($month);
-        $value = (int) ($this->{$column} ?? 0);
 
-        if ($value > 0) {
-            return $value;
-        }
-
-        $monthlyTotal = (int) (
-            (int) ($this->stock_jan ?? 0)
-            + (int) ($this->stock_feb ?? 0)
-            + (int) ($this->stock_mar ?? 0)
-            + (int) ($this->stock_apr ?? 0)
-            + (int) ($this->stock_may ?? 0)
-            + (int) ($this->stock_jun ?? 0)
-            + (int) ($this->stock_jul ?? 0)
-            + (int) ($this->stock_aug ?? 0)
-            + (int) ($this->stock_sep ?? 0)
-            + (int) ($this->stock_oct ?? 0)
-            + (int) ($this->stock_nov ?? 0)
-            + (int) ($this->stock_dec ?? 0)
-        );
-
-        if ($monthlyTotal === 0 && (int) ($this->initial_stock ?? 0) > 0) {
-            return (int) $this->initial_stock;
-        }
-
-        return $value;
+        return (int) ($this->{$column} ?? 0);
     }
 
     public function statusForMonth(int $month): string
