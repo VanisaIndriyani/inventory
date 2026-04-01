@@ -131,6 +131,54 @@ class Inventory extends Model
         return self::MONTH_TO_STOCK_COLUMN[$month] ?? 'stock_jan';
     }
 
+    public function stockForMonth(int $month): int
+    {
+        $column = self::stockColumnForMonth($month);
+        $value = (int) ($this->{$column} ?? 0);
+
+        if ($value > 0) {
+            return $value;
+        }
+
+        $monthlyTotal = (int) (
+            (int) ($this->stock_jan ?? 0)
+            + (int) ($this->stock_feb ?? 0)
+            + (int) ($this->stock_mar ?? 0)
+            + (int) ($this->stock_apr ?? 0)
+            + (int) ($this->stock_may ?? 0)
+            + (int) ($this->stock_jun ?? 0)
+            + (int) ($this->stock_jul ?? 0)
+            + (int) ($this->stock_aug ?? 0)
+            + (int) ($this->stock_sep ?? 0)
+            + (int) ($this->stock_oct ?? 0)
+            + (int) ($this->stock_nov ?? 0)
+            + (int) ($this->stock_dec ?? 0)
+        );
+
+        if ($monthlyTotal === 0 && (int) ($this->initial_stock ?? 0) > 0) {
+            return (int) $this->initial_stock;
+        }
+
+        return $value;
+    }
+
+    public function statusForMonth(int $month): string
+    {
+        $stock = $this->stockForMonth($month);
+        $reorderPoint = $this->reorder_point;
+        $warningPoint = $reorderPoint + max($this->safety_stock, 0);
+
+        if ($stock <= $reorderPoint) {
+            return 'Reorder';
+        }
+
+        if ($stock <= $warningPoint) {
+            return 'Warning';
+        }
+
+        return 'Aman';
+    }
+
     public function stockIns(): HasMany
     {
         return $this->hasMany(StockIn::class);
@@ -158,9 +206,7 @@ class Inventory extends Model
 
     public function getCurrentStockAttribute(): int
     {
-        $column = self::stockColumnForMonth(Carbon::now()->month);
-
-        return (int) ($this->{$column} ?? 0);
+        return $this->stockForMonth((int) Carbon::now()->month);
     }
 
     public function getAverageDailyUsage30Attribute(): float
@@ -185,18 +231,6 @@ class Inventory extends Model
 
     public function getStatusAttribute(): string
     {
-        $finalStock = $this->final_stock;
-        $reorderPoint = $this->reorder_point;
-        $warningPoint = $reorderPoint + max($this->safety_stock, 0);
-
-        if ($finalStock <= $reorderPoint) {
-            return 'Reorder';
-        }
-
-        if ($finalStock <= $warningPoint) {
-            return 'Warning';
-        }
-
-        return 'Aman';
+        return $this->statusForMonth((int) Carbon::now()->month);
     }
 }

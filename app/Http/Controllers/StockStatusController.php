@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Inventory;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class StockStatusController extends Controller
@@ -10,13 +11,19 @@ class StockStatusController extends Controller
     public function index(Request $request)
     {
         $statusFilter = $request->input('status');
+        $selectedMonth = (int) $request->input('month', (int) Carbon::now()->month);
 
-        $inventories = Inventory::with(['stockIns', 'stockOuts'])->get();
+        $inventories = Inventory::query()->orderBy('name')->get();
+
+        $inventories->each(function (Inventory $inventory) use ($selectedMonth) {
+            $inventory->setAttribute('selected_stock', $inventory->stockForMonth($selectedMonth));
+            $inventory->setAttribute('selected_status', $inventory->statusForMonth($selectedMonth));
+        });
 
         $grouped = [
-            'Aman' => $inventories->where('status', 'Aman'),
-            'Warning' => $inventories->where('status', 'Warning'),
-            'Reorder' => $inventories->where('status', 'Reorder'),
+            'Aman' => $inventories->where('selected_status', 'Aman'),
+            'Warning' => $inventories->where('selected_status', 'Warning'),
+            'Reorder' => $inventories->where('selected_status', 'Reorder'),
         ];
 
         $visibleInventories = $inventories;
@@ -27,6 +34,7 @@ class StockStatusController extends Controller
 
         return view('stock_status.index', [
             'statusFilter' => $statusFilter,
+            'selectedMonth' => $selectedMonth,
             'inventories' => $visibleInventories,
             'grouped' => $grouped,
         ]);
@@ -49,7 +57,10 @@ class StockStatusController extends Controller
         $inventory->update($data);
 
         return redirect()
-            ->route('stock-status.index', ['status' => $request->input('status')])
+            ->route('stock-status.index', [
+                'status' => $request->input('status'),
+                'month' => $request->input('month'),
+            ])
             ->with('status', 'Data Reorder Point berhasil diperbarui.');
     }
 }
