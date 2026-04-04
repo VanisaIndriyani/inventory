@@ -26,6 +26,7 @@ class Inventory extends Model
     protected $fillable = [
         'code',
         'name',
+        'initial_stock',
         'main_supplier',
         'supplier_lead_time',
         'storage_location',
@@ -133,9 +134,23 @@ class Inventory extends Model
 
     public function stockForMonth(int $month): int
     {
-        $column = self::stockColumnForMonth($month);
+        $currentMonth = (int) Carbon::now()->month;
 
-        return (int) ($this->{$column} ?? 0);
+        if ($month === $currentMonth) {
+            return $this->final_stock;
+        }
+
+        // Jika bukan bulan ini, kita bisa hitung stok pada akhir bulan tersebut
+        // Namun untuk kesederhanaan, jika user sudah mengisi kolom stock_xxx, kita gunakan itu
+        // Jika kolom tersebut 0, kita gunakan perhitungan final_stock (asumsi stok saat ini)
+        $column = self::stockColumnForMonth($month);
+        $manualStock = (int) ($this->{$column} ?? 0);
+
+        if ($manualStock > 0) {
+            return $manualStock;
+        }
+
+        return $this->final_stock;
     }
 
     public function statusForMonth(int $month): string
@@ -148,7 +163,14 @@ class Inventory extends Model
             return 'Reorder';
         }
 
-        if ($stock <= $reorderPoint) {
+        // Warning muncul jika stok di bawah atau sama dengan Reorder Point.
+        // Jika ROP belum terhitung (masih sama dengan Safety Stock), 
+        // kita gunakan threshold 50% di atas Safety Stock agar lebih sensitif.
+        $warningThreshold = ($reorderPoint <= $safetyStock) 
+            ? (int)round($safetyStock * 1.5) 
+            : $reorderPoint;
+
+        if ($stock <= $warningThreshold) {
             return 'Warning';
         }
 
@@ -177,7 +199,19 @@ class Inventory extends Model
 
     public function getFinalStockAttribute(): int
     {
-        return $this->current_stock;
+        // Prioritaskan initial_stock yang baru saya tambahkan, 
+        // tapi jika masih 0, cek apakah ada input manual di kolom bulan berjalan
+        $initialStock = (int) ($this->initial_stock ?? 0);
+        
+        if ($initialStock === 0) {
+            $currentMonthColumn = self::stockColumnForMonth((int) Carbon::now()->month);
+            $initialStock = (int) ($this->{$currentMonthColumn} ?? 0);
+        }
+
+        $totalIn = $this->total_in;
+        $totalOut = $this->total_out;
+
+        return $initialStock + $totalIn - $totalOut;
     }
 
     public function getCurrentStockAttribute(): int

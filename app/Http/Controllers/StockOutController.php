@@ -47,17 +47,14 @@ class StockOutController extends Controller
                     ->lockForUpdate()
                     ->findOrFail($data['inventory_id']);
 
-                $current = (int) ($inventory->{$monthColumn} ?? 0);
+                $currentStock = $inventory->final_stock;
                 $quantity = (int) $data['quantity'];
 
-                if ($quantity > $current) {
+                if ($quantity > $currentStock) {
                     throw new \RuntimeException('Stok tidak mencukupi.');
                 }
 
-                $inventory->update([
-                    $monthColumn => $current - $quantity,
-                ]);
-
+                // Tidak perlu update kolom stock_xxx lagi karena kita pakai initial_stock + in - out
                 StockOut::query()->create($data);
             });
         } catch (\RuntimeException $exception) {

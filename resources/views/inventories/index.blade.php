@@ -31,6 +31,7 @@
                     <tr>
                         <th>Kode Barang</th>
                         <th>Nama Barang</th>
+                        <th class="text-center text-primary">Stok Sekarang</th>
                         <th class="text-center">Jan</th>
                         <th class="text-center">Feb</th>
                         <th class="text-center">Mar</th>
@@ -52,6 +53,11 @@
                         <tr>
                             <td class="fw-semibold">{{ $inventory->code }}</td>
                             <td>{{ $inventory->name }}</td>
+                            <td class="text-center">
+                                <span class="badge bg-primary rounded-pill px-3">
+                                    {{ number_format($inventory->final_stock) }}
+                                </span>
+                            </td>
                             <td class="text-center">{{ number_format($inventory->stock_jan) }}</td>
                             <td class="text-center">{{ number_format($inventory->stock_feb) }}</td>
                             <td class="text-center">{{ number_format($inventory->stock_mar) }}</td>
@@ -135,7 +141,15 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
+                                <label class="form-label">Stok Awal</label>
+                                <input type="number" min="0" name="initial_stock" class="form-control @error('initial_stock') is-invalid @enderror"
+                                       value="{{ old('initial_stock', 0) }}" required>
+                                @error('initial_stock')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-8">
                                 <label class="form-label">Lokasi</label>
                                 <input type="text" name="storage_location"
                                        class="form-control @error('storage_location') is-invalid @enderror"
@@ -371,7 +385,13 @@
                                            class="form-control"
                                            value="{{ $inventory->name }}" required>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
+                                    <label class="form-label">Stok Awal</label>
+                                    <input type="number" min="0" name="initial_stock"
+                                           class="form-control"
+                                           value="{{ $inventory->initial_stock }}" required>
+                                </div>
+                                <div class="col-md-8">
                                     <label class="form-label">Lokasi</label>
                                     <input type="text" name="storage_location"
                                            class="form-control"

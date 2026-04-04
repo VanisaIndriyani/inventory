@@ -38,7 +38,15 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
+                        <label class="form-label">Stok Awal</label>
+                        <input type="number" min="0" name="initial_stock" class="form-control @error('initial_stock') is-invalid @enderror"
+                               value="{{ old('initial_stock', $inventory->initial_stock) }}" required>
+                        @error('initial_stock')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="col-md-8">
                         <label class="form-label">Lokasi</label>
                         <input type="text" name="storage_location"
                                class="form-control @error('storage_location') is-invalid @enderror"

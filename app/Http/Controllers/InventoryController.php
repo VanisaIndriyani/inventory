@@ -24,6 +24,7 @@ class InventoryController extends Controller
         $data = $request->validate([
             'code' => ['required', 'string', 'max:50', 'unique:inventories,code'],
             'name' => ['required', 'string', 'max:255'],
+            'initial_stock' => ['required', 'integer', 'min:0'],
             'storage_location' => ['nullable', 'string', 'max:255'],
             'stock_jan' => ['required', 'integer', 'min:0'],
             'stock_feb' => ['required', 'integer', 'min:0'],
@@ -56,6 +57,7 @@ class InventoryController extends Controller
         $data = $request->validate([
             'code' => ['required', 'string', 'max:50', 'unique:inventories,code,' . $inventory->id],
             'name' => ['required', 'string', 'max:255'],
+            'initial_stock' => ['required', 'integer', 'min:0'],
             'storage_location' => ['nullable', 'string', 'max:255'],
             'stock_jan' => ['required', 'integer', 'min:0'],
             'stock_feb' => ['required', 'integer', 'min:0'],

@@ -44,14 +44,7 @@ class StockInController extends Controller
                 ->lockForUpdate()
                 ->findOrFail($data['inventory_id']);
 
-            $receivedDate = Carbon::parse($data['received_at']);
-            $column = Inventory::stockColumnForMonth((int) $receivedDate->month);
-
-            $current = (int) ($inventory->{$column} ?? 0);
-            $inventory->update([
-                $column => $current + (int) $data['quantity'],
-            ]);
-
+            // Tidak perlu update kolom stock_xxx lagi karena kita pakai initial_stock + in - out
             StockIn::query()->create($data);
         });
 
