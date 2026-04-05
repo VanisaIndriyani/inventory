@@ -15,6 +15,66 @@
                 </span>
                 <span style="font-size: .7rem; color: #9ca3af;">Monitoring Inventory</span>
             </div>
+
+            <div class="dropdown">
+                @php
+                    $criticalCount = $globalCriticalItems->count() ?? 0;
+                @endphp
+                <button class="position-relative d-flex align-items-center justify-content-center border-0 rounded-circle"
+                        type="button"
+                        id="notificationDropdown"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                        style="width: 34px; height: 34px; background: rgba(15,23,42,0.7); color: #e5e7eb;">
+                    <i class="fa-regular fa-bell"></i>
+                    @if($criticalCount > 0)
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem; padding: 0.25em 0.45em;">
+                            {{ $criticalCount }}
+                        </span>
+                    @endif
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end p-0 border-0 shadow-lg" aria-labelledby="notificationDropdown" style="width: 300px; max-height: 400px; overflow-y: auto; border-radius: 12px;">
+                    <li class="p-3 border-bottom bg-light rounded-top">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0 fw-semibold text-dark">Notifikasi</h6>
+                            <span class="badge bg-danger rounded-pill small">{{ $criticalCount }} Kritis</span>
+                        </div>
+                    </li>
+                    @forelse($globalCriticalItems as $item)
+                        <li>
+                            <a class="dropdown-item p-3 border-bottom d-flex align-items-start gap-3" href="{{ route('stock-status.index') }}" style="white-space: normal;">
+                                <div class="flex-shrink-0 mt-1">
+                                    @if($item->status === 'Reorder')
+                                        <i class="fa-solid fa-circle-exclamation text-danger"></i>
+                                    @else
+                                        <i class="fa-solid fa-triangle-exclamation text-warning"></i>
+                                    @endif
+                                </div>
+                                <div>
+                                    <div class="fw-semibold small text-dark">{{ $item->name }}</div>
+                                    <div class="text-muted" style="font-size: 0.75rem;">
+                                        Status: <span class="fw-medium {{ $item->status === 'Reorder' ? 'text-danger' : 'text-warning' }}">{{ $item->status }}</span>
+                                    </div>
+                                    <div class="text-muted" style="font-size: 0.7rem;">
+                                        Stok: <span class="fw-bold">{{ number_format($item->final_stock) }}</span> unit
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                    @empty
+                        <li class="p-4 text-center text-muted small">
+                            <i class="fa-regular fa-bell-slash d-block mb-2 fs-4 opacity-25"></i>
+                            Tidak ada notifikasi stok kritis.
+                        </li>
+                    @endforelse
+                    @if($criticalCount > 0)
+                        <li class="text-center p-2 rounded-bottom">
+                            <a href="{{ route('stock-status.index') }}" class="text-decoration-none small fw-medium text-primary">Lihat Semua Reorder Point</a>
+                        </li>
+                    @endif
+                </ul>
+            </div>
+
             <div class="dropdown">
                 <button class="rounded-circle d-flex align-items-center justify-content-center border-0"
                         type="button"

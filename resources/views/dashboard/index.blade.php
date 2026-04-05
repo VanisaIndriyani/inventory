@@ -201,35 +201,6 @@
 
 @section('scripts')
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            @foreach($criticalItems as $item)
-                @if($item->status === 'Reorder')
-                    Toastify({
-                        text: "⚠️ STOK KRITIS: {{ $item->name }} ({{ $item->final_stock }} unit)",
-                        duration: 5000,
-                        close: true,
-                        gravity: "top",
-                        position: "right",
-                        style: {
-                            background: "linear-gradient(to right, #ef4444, #b91c1c)",
-                        }
-                    }).showToast();
-                @elseif($item->status === 'Warning')
-                    Toastify({
-                        text: "🔔 WARNING: {{ $item->name }} mendekati batas stok ({{ $item->final_stock }} unit)",
-                        duration: 4000,
-                        close: true,
-                        gravity: "top",
-                        position: "right",
-                        style: {
-                            background: "linear-gradient(to right, #f59e0b, #d97706)",
-                        }
-                    }).showToast();
-                @endif
-            @endforeach
-        });
-    </script>
-    <script>
         (function () {
             const ctx = document.getElementById('movementChart');
             if (!ctx) {
