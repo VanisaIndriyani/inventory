@@ -10,45 +10,19 @@
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div class="page-title">Reorder Point</div>
         <div class="d-flex flex-wrap gap-2 align-items-center">
-            <form method="GET" action="{{ route('stock-status.index') }}" class="d-flex gap-2 align-items-center">
-                <input type="hidden" name="status" value="{{ $statusFilter }}">
-                <select name="month" class="form-select form-select-sm" onchange="this.form.submit()">
-                    @php
-                        $monthNames = [
-                            1 => 'Januari',
-                            2 => 'Februari',
-                            3 => 'Maret',
-                            4 => 'April',
-                            5 => 'Mei',
-                            6 => 'Juni',
-                            7 => 'Juli',
-                            8 => 'Agustus',
-                            9 => 'September',
-                            10 => 'Oktober',
-                            11 => 'November',
-                            12 => 'Desember',
-                        ];
-                    @endphp
-                    @foreach($monthNames as $monthNumber => $monthLabel)
-                        <option value="{{ $monthNumber }}" {{ (int) $selectedMonth === (int) $monthNumber ? 'selected' : '' }}>
-                            {{ $monthLabel }}
-                        </option>
-                    @endforeach
-                </select>
-            </form>
-            <a href="{{ route('stock-status.index', ['month' => $selectedMonth]) }}"
+            <a href="{{ route('stock-status.index') }}"
                class="btn btn-sm {{ $statusFilter ? 'btn-outline-secondary' : 'btn-primary' }}">
                 Semua
             </a>
-            <a href="{{ route('stock-status.index', ['status' => 'Aman', 'month' => $selectedMonth]) }}"
+            <a href="{{ route('stock-status.index', ['status' => 'Aman']) }}"
                class="btn btn-sm {{ $statusFilter === 'Aman' ? 'btn-success' : 'btn-outline-success' }}">
                 Aman
             </a>
-            <a href="{{ route('stock-status.index', ['status' => 'Warning', 'month' => $selectedMonth]) }}"
+            <a href="{{ route('stock-status.index', ['status' => 'Warning']) }}"
                class="btn btn-sm {{ $statusFilter === 'Warning' ? 'btn-warning text-dark' : 'btn-outline-warning' }}">
                 Warning
             </a>
-            <a href="{{ route('stock-status.index', ['status' => 'Reorder', 'month' => $selectedMonth]) }}"
+            <a href="{{ route('stock-status.index', ['status' => 'Reorder']) }}"
                class="btn btn-sm {{ $statusFilter === 'Reorder' ? 'btn-danger' : 'btn-outline-danger' }}">
                 Reorder
             </a>
@@ -106,7 +80,6 @@
                     <thead>
                     <tr>
                         <th>Barang</th>
-                        <th class="text-end">Stok {{ $monthNames[$selectedMonth] ?? '' }}</th>
                         <th class="text-end">Usage Rate</th>
                         <th class="text-end">Lead Time</th>
                         <th class="text-center">Safety Stock</th>
@@ -117,7 +90,7 @@
                     </thead>
                     <tbody>
                     @php
-                        $sorted = $inventories->sortBy('selected_stock');
+                        $sorted = $inventories->sortBy('final_stock');
                     @endphp
                     @forelse($sorted as $inventory)
                         <tr>
@@ -125,7 +98,6 @@
                                 <div class="fw-semibold">{{ $inventory->name }}</div>
                                 <div class="small text-muted">{{ $inventory->code }}</div>
                             </td>
-                            <td class="text-end fw-semibold">{{ number_format((int) ($inventory->selected_stock ?? 0)) }}</td>
                             <td class="text-end">{{ number_format((float) $inventory->usage_rate, 2) }}</td>
                             <td class="text-end">{{ number_format($inventory->lead_time) }}</td>
                             <td class="text-center">{{ number_format($inventory->safety_stock) }}</td>
@@ -176,7 +148,6 @@
                             @csrf
                             @method('PUT')
                             <input type="hidden" name="status" value="{{ $statusFilter }}">
-                            <input type="hidden" name="month" value="{{ $selectedMonth }}">
                             <div class="row g-3">
                                 <div class="col-md-3">
                                     <label class="form-label">Usage Rate</label>

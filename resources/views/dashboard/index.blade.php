@@ -115,7 +115,7 @@
                                 <thead>
                                 <tr>
                                     <th>Barang</th>
-                                    <th class="text-end">Stok Bulan Ini</th>
+                                    <th class="text-end">Stok Sekarang</th>
                                     <th class="text-center">Status</th>
                                 </tr>
                                 </thead>
@@ -160,7 +160,7 @@
                     <thead>
                     <tr>
                         <th>Barang</th>
-                        <th class="text-end">Stok Bulan Ini</th>
+                        <th class="text-end">Stok Sekarang</th>
                         <th class="text-center">Safety Stock</th>
                         <th class="text-center">Reorder Point</th>
                         <th class="text-center">Status</th>

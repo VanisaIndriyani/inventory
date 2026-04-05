@@ -11,13 +11,11 @@ class StockStatusController extends Controller
     public function index(Request $request)
     {
         $statusFilter = $request->input('status');
-        $selectedMonth = (int) $request->input('month', (int) Carbon::now()->month);
 
         $inventories = Inventory::query()->orderBy('name')->get();
 
-        $inventories->each(function (Inventory $inventory) use ($selectedMonth) {
-            $inventory->setAttribute('selected_stock', $inventory->stockForMonth($selectedMonth));
-            $inventory->setAttribute('selected_status', $inventory->statusForMonth($selectedMonth));
+        $inventories->each(function (Inventory $inventory) {
+            $inventory->setAttribute('selected_status', $inventory->status);
         });
 
         $grouped = [
@@ -34,7 +32,6 @@ class StockStatusController extends Controller
 
         return view('stock_status.index', [
             'statusFilter' => $statusFilter,
-            'selectedMonth' => $selectedMonth,
             'inventories' => $visibleInventories,
             'grouped' => $grouped,
         ]);
@@ -55,7 +52,6 @@ class StockStatusController extends Controller
         return redirect()
             ->route('stock-status.index', [
                 'status' => $request->input('status'),
-                'month' => $request->input('month'),
             ])
             ->with('status', 'Data Reorder Point berhasil diperbarui.');
     }

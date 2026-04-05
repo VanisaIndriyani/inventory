@@ -80,7 +80,7 @@ class Inventory extends Model
 
     public function statusForMonth(int $month): string
     {
-        $stock = $this->stockForMonth($month);
+        $stock = $this->final_stock;
         $reorderPoint = $this->reorder_point;
         $safetyStock = max($this->safety_stock, 0);
 
