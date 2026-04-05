@@ -48,10 +48,6 @@ class StockStatusController extends Controller
             'safety_stock' => ['required', 'integer', 'min:0'],
         ];
 
-        for ($day = 1; $day <= 30; $day++) {
-            $rules['day_' . $day] = ['required', 'integer', 'min:0'];
-        }
-
         $data = $request->validate($rules);
 
         $inventory->update($data);

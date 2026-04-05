@@ -193,18 +193,6 @@
                                     <input type="number" min="0" name="safety_stock" class="form-control"
                                            value="{{ old('safety_stock', $inventory->safety_stock) }}" required>
                                 </div>
-
-                                <div class="col-12 mt-2">
-                                    <div class="fw-semibold">Hari 1 - 30 (Diisi Manual)</div>
-                                </div>
-
-                                @for($day = 1; $day <= 30; $day++)
-                                    <div class="col-md-2">
-                                        <label class="form-label">{{ $day }}</label>
-                                        <input type="number" min="0" name="day_{{ $day }}" class="form-control"
-                                               value="{{ old('day_' . $day, (int) ($inventory->{'day_' . $day} ?? 0)) }}" required>
-                                    </div>
-                                @endfor
                             </div>
                             <div class="mt-4 d-flex justify-content-end gap-2">
                                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">

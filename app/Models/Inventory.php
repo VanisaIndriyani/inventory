@@ -45,36 +45,6 @@ class Inventory extends Model
         'stock_oct',
         'stock_nov',
         'stock_dec',
-        'day_1',
-        'day_2',
-        'day_3',
-        'day_4',
-        'day_5',
-        'day_6',
-        'day_7',
-        'day_8',
-        'day_9',
-        'day_10',
-        'day_11',
-        'day_12',
-        'day_13',
-        'day_14',
-        'day_15',
-        'day_16',
-        'day_17',
-        'day_18',
-        'day_19',
-        'day_20',
-        'day_21',
-        'day_22',
-        'day_23',
-        'day_24',
-        'day_25',
-        'day_26',
-        'day_27',
-        'day_28',
-        'day_29',
-        'day_30',
     ];
 
     protected $casts = [
@@ -95,36 +65,6 @@ class Inventory extends Model
         'stock_oct' => 'integer',
         'stock_nov' => 'integer',
         'stock_dec' => 'integer',
-        'day_1' => 'integer',
-        'day_2' => 'integer',
-        'day_3' => 'integer',
-        'day_4' => 'integer',
-        'day_5' => 'integer',
-        'day_6' => 'integer',
-        'day_7' => 'integer',
-        'day_8' => 'integer',
-        'day_9' => 'integer',
-        'day_10' => 'integer',
-        'day_11' => 'integer',
-        'day_12' => 'integer',
-        'day_13' => 'integer',
-        'day_14' => 'integer',
-        'day_15' => 'integer',
-        'day_16' => 'integer',
-        'day_17' => 'integer',
-        'day_18' => 'integer',
-        'day_19' => 'integer',
-        'day_20' => 'integer',
-        'day_21' => 'integer',
-        'day_22' => 'integer',
-        'day_23' => 'integer',
-        'day_24' => 'integer',
-        'day_25' => 'integer',
-        'day_26' => 'integer',
-        'day_27' => 'integer',
-        'day_28' => 'integer',
-        'day_29' => 'integer',
-        'day_30' => 'integer',
     ];
 
     public static function stockColumnForMonth(int $month): string
@@ -134,23 +74,8 @@ class Inventory extends Model
 
     public function stockForMonth(int $month): int
     {
-        $currentMonth = (int) Carbon::now()->month;
-
-        if ($month === $currentMonth) {
-            return $this->final_stock;
-        }
-
-        // Jika bukan bulan ini, kita bisa hitung stok pada akhir bulan tersebut
-        // Namun untuk kesederhanaan, jika user sudah mengisi kolom stock_xxx, kita gunakan itu
-        // Jika kolom tersebut 0, kita gunakan perhitungan final_stock (asumsi stok saat ini)
         $column = self::stockColumnForMonth($month);
-        $manualStock = (int) ($this->{$column} ?? 0);
-
-        if ($manualStock > 0) {
-            return $manualStock;
-        }
-
-        return $this->final_stock;
+        return (int) ($this->{$column} ?? 0);
     }
 
     public function statusForMonth(int $month): string
@@ -199,19 +124,20 @@ class Inventory extends Model
 
     public function getFinalStockAttribute(): int
     {
-        // Prioritaskan initial_stock yang baru saya tambahkan, 
-        // tapi jika masih 0, cek apakah ada input manual di kolom bulan berjalan
-        $initialStock = (int) ($this->initial_stock ?? 0);
-        
-        if ($initialStock === 0) {
-            $currentMonthColumn = self::stockColumnForMonth((int) Carbon::now()->month);
-            $initialStock = (int) ($this->{$currentMonthColumn} ?? 0);
-        }
-
-        $totalIn = $this->total_in;
-        $totalOut = $this->total_out;
-
-        return $initialStock + $totalIn - $totalOut;
+        return (int) (
+            ($this->stock_jan ?? 0) +
+            ($this->stock_feb ?? 0) +
+            ($this->stock_mar ?? 0) +
+            ($this->stock_apr ?? 0) +
+            ($this->stock_may ?? 0) +
+            ($this->stock_jun ?? 0) +
+            ($this->stock_jul ?? 0) +
+            ($this->stock_aug ?? 0) +
+            ($this->stock_sep ?? 0) +
+            ($this->stock_oct ?? 0) +
+            ($this->stock_nov ?? 0) +
+            ($this->stock_dec ?? 0)
+        );
     }
 
     public function getCurrentStockAttribute(): int
